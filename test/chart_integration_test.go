@@ -33,7 +33,7 @@ func TestPodDeploysContainerImage(t *testing.T) {
 // verifyBlockSync will open a tunnel to the Pod and hit the endpoint to verify the node is in BlockSync state
 func verifyBlockSync(t *testing.T, kubectlOptions *k8s.KubectlOptions, podName string) {
 	// Wait for the pod to come up. It takes some time for the Pod to start, so retry a few times.
-	retries := 15
+	retries := 30
 	sleep := 5 * time.Second
 	k8s.WaitUntilPodAvailable(t, kubectlOptions, podName, retries, sleep)
 
