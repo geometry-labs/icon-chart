@@ -1,0 +1,28 @@
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.3.0
+    hooks:
+      - id: check-yaml
+        exclude: ^charts/\S*/templates/
+        args: [--allow-multiple-documents]
+
+  - repo: https://github.com/gruntwork-io/pre-commit
+    rev: v0.1.11
+    hooks:
+      - id: helmlint
+
+  - repo: https://github.com/norwoodj/helm-docs
+    rev: v1.2.0
+    hooks:
+      - id: helm-docs
+        args:
+          # Make the tool search for charts only under the `example-charts` directory
+          - --chart-search-root=example-charts
+
+          # The `./` makes it relative to the chart-search-root set above
+          - --template-files=./_templates.gotmpl
+
+          # Repeating the flag adds this to the list, now [./_templates.gotmpl, README.md.gotmpl]
+          # A base filename makes it relative to each chart directory found
+          - --template-files=README.md.gotmpl
