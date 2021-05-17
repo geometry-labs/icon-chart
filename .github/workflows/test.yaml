@@ -1,4 +1,4 @@
-name: Release Charts
+name: Test Chart
 
 on:
   push:
@@ -27,6 +27,8 @@ jobs:
 
       - name: Test
         run: |
+          sudo apt-get -y install socat
           export KUBE_CONFIG_PATH=$HOME/.kube/config
           cd test
           go test .
+          cd ..
