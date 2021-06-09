@@ -9,7 +9,7 @@ node_purpose: prep
 local: false
 
 image:
-  repo: iconloop/prep-node
+  repo: iconloop/icon-node
   tag: 2009031457xdaf395
 
 # Node port settings

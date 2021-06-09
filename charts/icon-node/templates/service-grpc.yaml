@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "prep-node.gRPCService" . }}
+  name: {{ include "icon-node.gRPCService" . }}
   labels:
     node: {{ .Release.Name }}
     app: {{ .Release.Name }}

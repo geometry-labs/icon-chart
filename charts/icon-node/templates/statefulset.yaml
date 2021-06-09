@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "prep-node.statefulsetName" . }}
+  name: {{ include "icon-node.statefulsetName" . }}
   labels:
     node: {{ .Release.Name }}
     app: {{ .Release.Name }}
@@ -15,7 +15,7 @@ spec:
     matchLabels:
       node: {{ .Release.Name }}
       app: {{ .Release.Name }}
-  serviceName: {{ include "prep-node.statefulsetName" . }}
+  serviceName: {{ include "icon-node.statefulsetName" . }}
   template:
     metadata:
       labels:
@@ -26,7 +26,7 @@ spec:
       volumes:
         - name: node-certificate
           secret:
-            secretName: {{ include "prep-node.certificate-name" .}}
+            secretName: {{ include "icon-node.certificate-name" .}}
       {{- end }}
       {{- if not .Values.local }}
       securityContext:
@@ -81,7 +81,7 @@ spec:
             - name: PRIVATE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "prep-node.certificate-password" .}}
+                  name: {{ include "icon-node.certificate-password" .}}
                   key: password
             {{- end }}
           ports:

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "prep-node.rpcService" . }}
+  name: {{ include "icon-node.rpcService" . }}
   labels:
     node: {{ .Release.Name }}
     app: {{ .Release.Name }}
