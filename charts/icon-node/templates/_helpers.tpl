@@ -81,3 +81,8 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- define "rpcService" -}}
 {{ .Release.Name }}-rpc
 {{- end }}
+
+{{/* Returns the data PVC name */}}
+{{- define "dataPVCName" -}}
+{{ .Release.Name }}-data
+{{- end }}
