@@ -1,4 +1,4 @@
-{{ if eq .Values.node_purpose "prep" }}
+{{ if eq .Values.node.purpose "prep" }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -8,7 +8,7 @@ metadata:
     app: {{ .Release.Name }}
 spec:
   ports:
-    - port: {{ .Values.gRPCPort }}
+    - port: {{ .Values.node.ports.gRPC }}
       name: grpc
   selector:
     node: {{ .Release.Name }}

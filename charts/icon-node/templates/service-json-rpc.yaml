@@ -7,7 +7,7 @@ metadata:
     app: {{ .Release.Name }}
 spec:
   ports:
-    - port: {{ .Values.rpcPort }}
+    - port: {{ .Values.node.ports.rpc }}
       name: json-rpc
   selector:
     node: {{ .Release.Name }}

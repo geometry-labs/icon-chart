@@ -1,4 +1,4 @@
-{{ if eq .Values.node_purpose "prep" }}
+{{ if eq .Values.node.purpose "prep" }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -22,20 +22,20 @@ spec:
         node: {{ .Release.Name }}
         app: {{ .Release.Name }}
     spec:
-      {{- if not .Values.generateCert}}
+      {{- if not .Values.node.certificate.autoGenerate}}
       volumes:
         - name: node-certificate
           secret:
             secretName: {{ include "icon-node.certificate-name" .}}
       {{- end }}
-      {{- if not .Values.local }}
+      {{- if not .Values.node.runLocal }}
       securityContext:
         runAsUser: 1000
         fsGroup: 1000
         runAsNonRoot: true
       {{- end }}
       initContainers:
-        {{- if .Values.local }}
+        {{- if .Values.node.runLocal }}
         - name: volume-mount-permissions-data
           image: busybox
           command: ["sh", "-c", "chown -R 1000:1000 /data"]
@@ -62,20 +62,20 @@ spec:
                 - SYS_TIME
           env:
             - name: FASTEST_START
-              value: {{ .Values.fastestStart }}
+              value: {{ .Values.node.fastestStart }}
             - name: CERT_PATH
               value: /cert
             - name: ICON_LOG_LEVEL
-              value: {{ .Values.iconLogLevel }}
+              value: {{ .Values.node.iconLogLevel }}
             - name: LOOPCHAIN_LOG_LEVEL
-              value: {{ .Values.loopchainLogLevel }}
+              value: {{ .Values.node.loopchainLogLevel }}
             - name: NETWORK_ENV
-              value: {{ .Values.networkEnvironment }}
-            {{- if .Values.generateCert}}
+              value: {{ .Values.node.networkEnvironment }}
+            {{- if .Values.node.certificate.autoGenerate}}
             - name: IS_AUTOGEN_CERT
               value: "true"
             {{- end}}
-            {{- if not .Values.generateCert }}
+            {{- if not .Values.node.certificate.autoGenerate }}
             - name: PRIVATE_KEY_FILENAME
               value: "cert.pem"
             - name: PRIVATE_PASSWORD
@@ -85,9 +85,9 @@ spec:
                   key: password
             {{- end }}
           ports:
-            - containerPort: {{ .Values.gRPCPort }}
+            - containerPort: {{ .Values.node.ports.gRPC }}
               name: grpc
-            - containerPort: {{ .Values.rpcPort }}
+            - containerPort: {{ .Values.node.ports.rpc }}
               name: json-rpc
           readinessProbe:
             failureThreshold: 100
@@ -99,7 +99,7 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
-            {{- if .Values.generateCert }}
+            {{- if .Values.node.certificate.autoGenerate }}
             - name: cert
               mountPath: /cert
             {{- else }}
@@ -108,15 +108,15 @@ spec:
               readOnly: true
             {{- end }}
           resources:
-      {{ toYaml .Values.resources | indent 10 }}
+      {{ toYaml .Values.deployment.resources | indent 10 }}
   volumeClaimTemplates:
     - metadata:
         name: data
       spec:
-        accessModes: {{ .Values.storage.accessModes }}
+        accessModes: {{ .Values.deployment.storage.accessModes }}
         resources:
           requests:
-            storage: {{ .Values.storage.dataSize }}
+            storage: {{ .Values.deployment.storage.dataSize }}
     - metadata:
         name: cert
       spec:

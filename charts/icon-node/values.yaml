@@ -3,39 +3,34 @@
 
 namespace: icon
 
-node_purpose: prep
-
-# Are you running this locally?
-local: false
-
 image:
   repo: iconloop/icon-node
   tag: 2009031457xdaf395
 
-# Node port settings
-gRPCPort: 7100
-rpcPort: 9000
+node:
+  purpose: prep
+  runLocal: false
+  ports:
+    gRPC: 7100
+    rpc: 9000
+  fastestStart: "\"yes\""
+  iconLogLevel: DEBUG
+  loopchainLogLevel: DEBUG
+  networkEnvironment: mainnet
+  certificate:
+    autoGenerate: true
+    contents: |-
+      -----BEGIN EC PRIVATE KEY-----
+      ... your key contents ...
+      -----END EC PRIVATE KEY-----
+    password: password123
 
-resources: {}
+deployment:
+  replicas: 1
+  resources: {}
 #  requests:
 #    memory: "5Gi"
 #    cpu: "1.5"
-
-# Node storage
-storage:
-  dataSize: 360Gi
-  accessModes: [ "ReadWriteOnce" ]
-
-# Node settings
-fastestStart: "\"yes\""
-iconLogLevel: DEBUG
-loopchainLogLevel: DEBUG
-networkEnvironment: mainnet
-
-# Node certificate settings
-generateCert: true
-certificateContents: |-
-  -----BEGIN EC PRIVATE KEY-----
-  ... your key contents ...
-  -----END EC PRIVATE KEY-----
-certificatePassword: password123
+  storage:
+    dataSize: 360Gi
+    accessModes: [ "ReadWriteOnce" ]
