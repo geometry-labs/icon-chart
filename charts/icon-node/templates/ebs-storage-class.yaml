@@ -1,6 +1,26 @@
+{{ if and (eq .Values.cloudProvider "aws") (eq .Values.storageClass "ebs-csi") }}
+
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
   name: ebs-sc
 provisioner: ebs.csi.aws.com
 volumeBindingMode: WaitForFirstConsumer
+
+{{ end }}
+
+---
+
+{{ if and (eq .Values.cloudProvider "aws") (eq .Values.storageClass "ebs-csi") }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "dataPVCName" . }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ebs-sc
+  resources:
+    requests:
+      storage: {{ .Values.deployment.storage.dataSize }}
+{{ end }}
