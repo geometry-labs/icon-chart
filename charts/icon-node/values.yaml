@@ -2,6 +2,7 @@
 # Declare variables to be passed into your templates.
 
 namespace: icon
+cloudProvider: aws
 
 image:
   repo: iconloop/icon-node
@@ -17,6 +18,19 @@ node:
   iconLogLevel: DEBUG
   loopchainLogLevel: DEBUG
   networkEnvironment: mainnet
+  endpointURL: ""
+  findNeighbor: true
+  findNeighborCount: 5
+  findNeighborOption: ""
+  useNAT: no
+  amqpTarget: "127.0.0.1"
+  amqpKey: ""
+  useExternalMQ: false
+  healthCheckInterval: 30
+  useSlack: no
+  slackURL: ""
+  slackPrefix: ""
+
   certificate:
     autoGenerate: true
     contents: |-

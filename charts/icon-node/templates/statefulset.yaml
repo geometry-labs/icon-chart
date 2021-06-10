@@ -68,6 +68,30 @@ spec:
               value: {{ .Values.node.loopchainLogLevel }}
             - name: NETWORK_ENV
               value: {{ .Values.node.networkEnvironment }}
+            - name: ENDPOINT_URL
+              value: {{ .Values.node.endpointURL }}
+            - name: FIND_NEIGHBOR
+              value: {{ .Values.node.findNeighbor }}
+            - name: FIND_NEIGHBOR_COUNT
+              value: {{ .Values.node.findNeighborCount }}
+            - name: FIND_NEIGHBOR_OPTION
+              value: {{ .Values.node.findNeighborOption }}
+            - name: USE_NAT
+              value: {{ .Values.node.useNAT }}
+            - name: AMQP_TARGET
+              value: {{ .Values.node.amqpTarget }}
+            - name: USE_EXTERNAL_MQ
+              value: {{ .Values.node.useExternalMQ }}
+            - name: AMQP_KEY
+              value: {{ .Values.node.amqpKey }}
+            - name: HEALTH_CHECK_INTERVAL
+              value: {{ .Values.node.healthCheckInterval }}
+            - name: USE_SLACK
+              value: {{ .Values.node.useSlack }}
+            - name: SLACK_URL
+              value: {{ .Values.node.slackURL }}
+            - name: SLACK_PREFIX
+              value: {{ .Values.node.slackPrefix }}
             {{- if .Values.node.certificate.autoGenerate}}
             - name: IS_AUTOGEN_CERT
               value: "true"
