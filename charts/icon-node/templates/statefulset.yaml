@@ -4,7 +4,7 @@ kind: StatefulSet
 metadata:
   name: {{ include "icon-node.statefulsetName" . }}
   labels:
-    {{ include "icon-node.labels" . }}
+{{ include "icon-node.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.deployment.replicas }}
   revisionHistoryLimit: 3
@@ -12,12 +12,12 @@ spec:
     type: RollingUpdate
   selector:
     matchLabels:
-      {{ include "icon-node.selectorLabels" . }}
+{{ include "icon-node.selectorLabels" . | indent 6 }}
   serviceName: {{ include "icon-node.statefulsetName" . }}
   template:
     metadata:
       labels:
-        {{ include "icon-node.labels" . }}
+{{ include "icon-node.labels" . | indent 8 }}
     spec:
       {{- if not .Values.node.certificate.autoGenerate}}
       volumes:
@@ -105,7 +105,7 @@ spec:
               readOnly: true
             {{- end }}
           resources:
-      {{ toYaml .Values.deployment.resources | indent 10 }}
+{{ toYaml .Values.deployment.resources | indent 12 }}
   volumeClaimTemplates:
     - metadata:
         name: data
