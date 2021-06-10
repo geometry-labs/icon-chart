@@ -3,13 +3,11 @@ kind: Service
 metadata:
   name: {{ include "icon-node.rpcService" . }}
   labels:
-    node: {{ .Release.Name }}
-    app: {{ .Release.Name }}
+    {{ include "icon-node.labels" . }}
 spec:
   ports:
     - port: {{ .Values.node.ports.rpc }}
       name: json-rpc
   selector:
-    node: {{ .Release.Name }}
-    app: {{ .Release.Name }}
+    {{ include "icon-node.selectorLabels" . }}
   type: LoadBalancer

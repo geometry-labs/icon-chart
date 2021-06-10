@@ -4,8 +4,7 @@ kind: StatefulSet
 metadata:
   name: {{ include "icon-node.statefulsetName" . }}
   labels:
-    node: {{ .Release.Name }}
-    app: {{ .Release.Name }}
+    {{ include "icon-node.labels" . }}
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -13,14 +12,12 @@ spec:
     type: RollingUpdate
   selector:
     matchLabels:
-      node: {{ .Release.Name }}
-      app: {{ .Release.Name }}
+      {{ include "icon-node.selectorLabels" . }}
   serviceName: {{ include "icon-node.statefulsetName" . }}
   template:
     metadata:
       labels:
-        node: {{ .Release.Name }}
-        app: {{ .Release.Name }}
+        {{ include "icon-node.labels" . }}
     spec:
       {{- if not .Values.node.certificate.autoGenerate}}
       volumes:
