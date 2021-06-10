@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "icon-node.gRPCService" . }}
+  name: {{ include "gRPCService" . }}
   labels:
-{{ include "icon-node.labels" . | indent 4 }}
+{{ include "labels" . | indent 4 }}
     node: {{ .Release.Name }}
     app: {{ .Release.Name }}
 spec:
@@ -12,6 +12,6 @@ spec:
     - port: {{ .Values.node.ports.gRPC }}
       name: grpc
   selector:
-{{ include "icon-node.selectorLabels" . | indent 4 }}
+{{ include "selectorLabels" . | indent 4 }}
   type: NodePort
 {{ end }}
