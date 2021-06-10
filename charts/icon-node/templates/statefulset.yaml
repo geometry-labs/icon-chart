@@ -111,6 +111,7 @@ spec:
         name: data
       spec:
         accessModes: {{ .Values.deployment.storage.accessModes }}
+        storageClassName: {{ .Values.deployment.storage.storageClassName }}
         resources:
           requests:
             storage: {{ .Values.deployment.storage.dataSize }}

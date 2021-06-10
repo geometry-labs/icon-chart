@@ -32,5 +32,6 @@ deployment:
 #    memory: "5Gi"
 #    cpu: "1.5"
   storage:
+    storageClassName: ebs-sc
     dataSize: 360Gi
     accessModes: [ "ReadWriteOnce" ]
