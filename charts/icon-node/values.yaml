@@ -5,8 +5,8 @@ namespace: icon
 cloudProvider: aws
 
 image:
-  repo: iconloop/icon-node
-  tag: 2009031457xdaf395
+  repo: iconloop/prep-node
+  tag: "20210314.0"
 
 node:
   purpose: prep

@@ -71,23 +71,23 @@ spec:
             - name: ENDPOINT_URL
               value: {{ .Values.node.endpointURL }}
             - name: FIND_NEIGHBOR
-              value: {{ .Values.node.findNeighbor }}
+              value: {{ .Values.node.findNeighbor | quote }}
             - name: FIND_NEIGHBOR_COUNT
-              value: {{ .Values.node.findNeighborCount }}
+              value: {{ .Values.node.findNeighborCount | quote}}
             - name: FIND_NEIGHBOR_OPTION
               value: {{ .Values.node.findNeighborOption }}
             - name: USE_NAT
-              value: {{ .Values.node.useNAT }}
+              value: {{ .Values.node.useNAT | quote }}
             - name: AMQP_TARGET
-              value: {{ .Values.node.amqpTarget }}
+              value: {{ .Values.node.amqpTarget | quote }}
             - name: USE_EXTERNAL_MQ
-              value: {{ .Values.node.useExternalMQ }}
+              value: {{ .Values.node.useExternalMQ | quote }}
             - name: AMQP_KEY
               value: {{ .Values.node.amqpKey }}
             - name: HEALTH_CHECK_INTERVAL
-              value: {{ .Values.node.healthCheckInterval }}
+              value: {{ .Values.node.healthCheckInterval | quote }}
             - name: USE_SLACK
-              value: {{ .Values.node.useSlack }}
+              value: {{ .Values.node.useSlack | quote }}
             - name: SLACK_URL
               value: {{ .Values.node.slackURL }}
             - name: SLACK_PREFIX
@@ -118,7 +118,7 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 10
           volumeMounts:
-            - name: data
+            - name: {{ template "dataPVCName" . }}
               mountPath: /data
             {{- if .Values.node.certificate.autoGenerate }}
             - name: cert
@@ -132,7 +132,7 @@ spec:
 {{ toYaml .Values.deployment.resources | indent 12 }}
   volumeClaimTemplates:
     - metadata:
-        name: data
+        name: {{ template "dataPVCName" . }}
       spec:
         accessModes: {{ .Values.deployment.storage.accessModes }}
         storageClassName: {{ .Values.deployment.storage.storageClassName }}
