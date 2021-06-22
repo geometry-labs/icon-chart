@@ -1,8 +1,8 @@
-{{- if not .Values.local }}
+{{- if not .Values.node.runLocal }}
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
-  name: {{ template "prep-node.podSecurityPolicyName" . }}
+  name: {{ template "podSecurityPolicyName" . }}
   annotations:
     seccomp.security.alpha.kubernetes.io/allowedProfileNames: 'docker/default'
     apparmor.security.beta.kubernetes.io/allowedProfileNames: 'runtime/default'

@@ -1,2 +1,3 @@
-node_purpose: prep
-fastestStart: "\"no\""
+node:
+  purpose: prep
+  fastestStart: "\"no\""

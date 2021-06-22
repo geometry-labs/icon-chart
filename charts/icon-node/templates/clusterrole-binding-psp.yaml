@@ -1,10 +1,10 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ template "prep-node.podSecurityPolicyName" . }}
+  name: {{ template "podSecurityPolicyName" . }}
 roleRef:
   kind: ClusterRole
-  name: {{ template "prep-node.podSecurityPolicyName" . }}
+  name: {{ template "podSecurityPolicyName" . }}
   apiGroup: rbac.authorization.k8s.io
 subjects:
   - kind: Group

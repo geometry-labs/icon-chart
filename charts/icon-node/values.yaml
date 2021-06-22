@@ -2,40 +2,50 @@
 # Declare variables to be passed into your templates.
 
 namespace: icon
-
-node_purpose: prep
-
-# Are you running this locally?
-local: false
+cloudProvider: aws
 
 image:
   repo: iconloop/prep-node
-  tag: 2009031457xdaf395
+  tag: "20210314.0"
 
-# Node port settings
-gRPCPort: 7100
-rpcPort: 9000
+node:
+  purpose: prep
+  runLocal: false
+  ports:
+    gRPC: 7100
+    rpc: 9000
+  fastestStart: "\"yes\""
+  iconLogLevel: DEBUG
+  loopchainLogLevel: DEBUG
+  networkEnvironment: mainnet
+  endpointURL: ""
+  findNeighbor: true
+  findNeighborCount: 5
+  findNeighborOption: ""
+  useNAT: no
+  amqpTarget: "127.0.0.1"
+  amqpKey: ""
+  useExternalMQ: false
+  healthCheckInterval: 30
+  useSlack: no
+  slackURL: ""
+  slackPrefix: ""
 
-resources: {}
+  certificate:
+    autoGenerate: true
+    contents: |-
+      -----BEGIN EC PRIVATE KEY-----
+      ... your key contents ...
+      -----END EC PRIVATE KEY-----
+    password: password123
+
+deployment:
+  replicas: 1
+  resources: {}
 #  requests:
 #    memory: "5Gi"
 #    cpu: "1.5"
-
-# Node storage
-storage:
-  dataSize: 360Gi
-  accessModes: [ "ReadWriteOnce" ]
-
-# Node settings
-fastestStart: "\"yes\""
-iconLogLevel: DEBUG
-loopchainLogLevel: DEBUG
-networkEnvironment: mainnet
-
-# Node certificate settings
-generateCert: true
-certificateContents: |-
-  -----BEGIN EC PRIVATE KEY-----
-  ... your key contents ...
-  -----END EC PRIVATE KEY-----
-certificatePassword: password123
+  storage:
+    storageClassName: ebs-sc
+    dataSize: 360Gi
+    accessModes: [ "ReadWriteOnce" ]

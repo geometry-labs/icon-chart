@@ -1,0 +1,10 @@
+{{ if and (eq .Values.cloudProvider "aws") (eq .Values.deployment.storage.storageClassName "ebs-sc") }}
+
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: ebs-sc
+provisioner: ebs.csi.aws.com
+volumeBindingMode: WaitForFirstConsumer
+
+{{ end }}
