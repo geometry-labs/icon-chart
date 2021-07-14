@@ -41,6 +41,7 @@ node:
 
 deployment:
   replicas: 1
+  annotations: null
   resources: {}
 #  requests:
 #    memory: "5Gi"
