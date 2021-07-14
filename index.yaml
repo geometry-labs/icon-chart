@@ -3,6 +3,16 @@ entries:
   icon-node:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2021-07-14T17:42:22.509881252Z"
+    description: A Helm chart for ICON blockchain node
+    digest: 32f5d381ae2370186a861e94ba884035a3b8f2109f7e017c9a64c79b79ba6b2b
+    name: icon-node
+    type: application
+    urls:
+    - https://github.com/geometry-labs/icon-chart/releases/download/icon-node-0.1.3/icon-node-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2021-06-22T07:47:25.016707298Z"
     description: A Helm chart for ICON blockchain node
     digest: 53b7aa71aeee1c27814e4fbababfb4ce1d26013ad35231a3c30f7e2d810319c9
@@ -21,4 +31,4 @@ entries:
     urls:
     - https://github.com/geometry-labs/icon-chart/releases/download/icon-node-0.1.1/icon-node-0.1.1.tgz
     version: 0.1.1
-generated: "2021-06-22T07:47:25.016714998Z"
+generated: "2021-07-14T17:42:22.509893952Z"
