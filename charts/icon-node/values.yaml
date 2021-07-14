@@ -50,3 +50,9 @@ deployment:
     storageClassName: ebs-sc
     dataSize: 360Gi
     accessModes: [ "ReadWriteOnce" ]
+
+service:
+  rpc:
+    type: NodePort
+  gRPC:
+    type: NodePort

@@ -10,4 +10,4 @@ spec:
       name: json-rpc
   selector:
 {{ include "selectorLabels" . | indent 4 }}
-  type: LoadBalancer
+  type: {{ .Values.service.rpc.type | default "NodePort" }}
