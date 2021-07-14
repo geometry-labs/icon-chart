@@ -16,6 +16,10 @@ spec:
   serviceName: {{ include "statefulsetName" . }}
   template:
     metadata:
+      {{- if .Values.deployment.annotations }}
+      annotations:
+{{ tpl .Values.deployment.annotations . | indent 8 }}
+      {{- end }}
       labels:
 {{ include "labels" . | indent 8 }}
     spec:
