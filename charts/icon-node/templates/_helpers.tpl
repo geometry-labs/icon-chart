@@ -51,10 +51,13 @@ app.kubernetes.io/name: {{ include "name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
+{{- define "ebsSCName" -}}
+{{ template "fullname" . }}-ebs-sc
+{{- end }}
 
 {{/* Returns the PSP name */}}
 {{- define "podSecurityPolicyName" -}}
-{{ .Release.Name }}
+{{ template "fullname" . }}
 {{- end }}
 
 {{/* Returns the statefulset name */}}

@@ -139,7 +139,11 @@ spec:
         name: {{ template "dataPVCName" . }}
       spec:
         accessModes: {{ .Values.deployment.storage.accessModes }}
+        {{- if eq .Values.deployment.storage.storageClassName "ebs-sc" }}
+        storageClassName: {{ template "ebsSCName" . }}
+        {{- else }}
         storageClassName: {{ .Values.deployment.storage.storageClassName }}
+        {{- end }}
         resources:
           requests:
             storage: {{ .Values.deployment.storage.dataSize }}
