@@ -3,7 +3,7 @@
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
-  name: ebs-sc
+  name: {{ template "ebsSCName" . }}
 provisioner: ebs.csi.aws.com
 volumeBindingMode: WaitForFirstConsumer
 
