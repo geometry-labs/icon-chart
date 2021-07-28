@@ -14,6 +14,8 @@ node:
   ports:
     gRPC: 7100
     rpc: 9000
+  extIPAddr:
+  useNAT: no
   fastestStart: "\"yes\""
   iconLogLevel: DEBUG
   loopchainLogLevel: DEBUG
@@ -22,7 +24,6 @@ node:
   findNeighbor: true
   findNeighborCount: 5
   findNeighborOption: ""
-  useNAT: no
   amqpTarget: "127.0.0.1"
   amqpKey: ""
   useExternalMQ: false
@@ -48,7 +49,7 @@ deployment:
 #    cpu: "1.5"
   storage:
     storageClassName: ebs-sc
-    dataSize: 360Gi
+    dataSize: 480Gi
     accessModes: [ "ReadWriteOnce" ]
 
 service:

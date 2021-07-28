@@ -62,6 +62,8 @@ spec:
               add:
                 - SYS_TIME
           env:
+            - name: EXT_IPADDR
+              value: {{ .Values.node.extIPAddr }}
             - name: FASTEST_START
               value: {{ .Values.node.fastestStart }}
             - name: CERT_PATH
