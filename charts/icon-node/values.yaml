@@ -5,40 +5,47 @@ namespace: icon
 cloudProvider: aws
 
 image:
-  repo: iconloop/prep-node
-  tag: "20210314.0"
+  repo: iconloop/goloop-icon
+  tag: latest
 
 node:
-  purpose: prep
-  runLocal: false
-  ports:
-    gRPC: 7100
-    rpc: 9000
-  extIPAddr:
-  useNAT: no
-  fastestStart: "\"yes\""
-  iconLogLevel: DEBUG
-  loopchainLogLevel: DEBUG
-  networkEnvironment: mainnet
-  endpointURL: ""
-  findNeighbor: true
-  findNeighborCount: 5
-  findNeighborOption: ""
-  amqpTarget: "127.0.0.1"
-  amqpKey: ""
-  useExternalMQ: false
-  healthCheckInterval: 30
-  useSlack: no
-  slackURL: ""
-  slackPrefix: ""
-
-  certificate:
-    autoGenerate: true
-    contents: |-
-      -----BEGIN EC PRIVATE KEY-----
-      ... your key contents ...
-      -----END EC PRIVATE KEY-----
-    password: password123
+  key:
+    password:
+    plugin:
+    pluginOptions:
+    secret:
+    store:
+  log:
+    forwarder:
+      address:
+      level: info
+      name:
+      options:
+      vendor:
+    level: debug
+    writer:
+      compress: false
+      filename:
+      localtime: false
+      maxAge: 0
+      maxBackups: 0
+      maxSize: 100
+  network:
+    ee:
+      socket:
+    p2p:
+      advertise: 127.0.0.1
+      port: 8080
+      listen:
+    rpc:
+      address: 9080
+      dump: false
+  config:
+  consoleLevel: trace
+  backupDirectory:
+  engines: python
+  directory: /data
+  socket:
 
 deployment:
   replicas: 1
@@ -55,5 +62,5 @@ deployment:
 service:
   rpc:
     type: NodePort
-  gRPC:
+  p2pS:
     type: NodePort

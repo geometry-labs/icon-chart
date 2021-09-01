@@ -1,17 +1,13 @@
-{{ if eq .Values.node.purpose "prep" }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "gRPCService" . }}
+  name: {{ include "rpcService" . }}
   labels:
 {{ include "labels" . | indent 4 }}
-    node: {{ .Release.Name }}
-    app: {{ .Release.Name }}
 spec:
   ports:
-    - port: {{ .Values.node.ports.gRPC }}
-      name: grpc
+    - port: {{ .Values.node.network.rpc.address }}
+      name: rpc
   selector:
 {{ include "selectorLabels" . | indent 4 }}
   type: {{ .Values.service.rpc.type | default "NodePort" }}
-{{ end }}

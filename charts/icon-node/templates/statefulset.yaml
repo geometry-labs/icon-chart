@@ -1,4 +1,3 @@
-{{ if eq .Values.node.purpose "prep" }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -23,38 +22,14 @@ spec:
       labels:
 {{ include "labels" . | indent 8 }}
     spec:
-      {{- if not .Values.node.certificate.autoGenerate}}
-      volumes:
-        - name: node-certificate
-          secret:
-            secretName: {{ include "certificate-name" .}}
-      {{- end }}
-      {{- if not .Values.node.runLocal }}
       securityContext:
         runAsUser: 1000
         fsGroup: 1000
         runAsNonRoot: true
-      {{- end }}
-      initContainers:
-        {{- if .Values.node.runLocal }}
-        - name: volume-mount-permissions-data
-          image: busybox
-          command: ["sh", "-c", "chown -R 1000:1000 /data"]
-          securityContext:
-            runAsUser: 0
-            runAsNonRoot: false
-          volumeMounts:
-            - name: data
-              mountPath: /data
-        {{- end }}
       containers:
         - name: {{ .Release.Name }}
           image: {{ .Values.image.repo }}:{{ .Values.image.tag }}
           imagePullPolicy: IfNotPresent
-          command: ["/bin/sh"]
-          args:
-            - -c
-            - /src/entrypoint.sh
           securityContext:
             runAsUser: 0
             runAsNonRoot: false
@@ -62,78 +37,76 @@ spec:
               add:
                 - SYS_TIME
           env:
-            - name: EXT_IPADDR
-              value: {{ .Values.node.extIPAddr }}
-            - name: FASTEST_START
-              value: {{ .Values.node.fastestStart }}
-            - name: CERT_PATH
-              value: /cert
-            - name: ICON_LOG_LEVEL
-              value: {{ .Values.node.iconLogLevel }}
-            - name: LOOPCHAIN_LOG_LEVEL
-              value: {{ .Values.node.loopchainLogLevel }}
-            - name: NETWORK_ENV
-              value: {{ .Values.node.networkEnvironment }}
-            - name: ENDPOINT_URL
-              value: {{ .Values.node.endpointURL }}
-            - name: FIND_NEIGHBOR
-              value: {{ .Values.node.findNeighbor | quote }}
-            - name: FIND_NEIGHBOR_COUNT
-              value: {{ .Values.node.findNeighborCount | quote}}
-            - name: FIND_NEIGHBOR_OPTION
-              value: {{ .Values.node.findNeighborOption }}
-            - name: USE_NAT
-              value: {{ .Values.node.useNAT | quote }}
-            - name: AMQP_TARGET
-              value: {{ .Values.node.amqpTarget | quote }}
-            - name: USE_EXTERNAL_MQ
-              value: {{ .Values.node.useExternalMQ | quote }}
-            - name: AMQP_KEY
-              value: {{ .Values.node.amqpKey }}
-            - name: HEALTH_CHECK_INTERVAL
-              value: {{ .Values.node.healthCheckInterval | quote }}
-            - name: USE_SLACK
-              value: {{ .Values.node.useSlack | quote }}
-            - name: SLACK_URL
-              value: {{ .Values.node.slackURL }}
-            - name: SLACK_PREFIX
-              value: {{ .Values.node.slackPrefix }}
-            {{- if .Values.node.certificate.autoGenerate}}
-            - name: IS_AUTOGEN_CERT
-              value: "true"
-            {{- end}}
-            {{- if not .Values.node.certificate.autoGenerate }}
-            - name: PRIVATE_KEY_FILENAME
-              value: "cert.pem"
-            - name: PRIVATE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "certificate-password" .}}
-                  key: password
-            {{- end }}
+            - name: GOLOOP_BACKUP_DIR
+              value: {{ .Values.node.backupDirectory }}
+            - name: GOLOOP_CONFIG
+              value: {{ .Values.node.config }}
+            - name: GOLOOP_CONSOLE_LEVEL
+              value: {{ .Values.node.consoleLevel | default "trace" }}
+            - name: GOLOOP_EE_SOCKET
+              value: {{ .Values.node.network.ee.socket }}
+            - name: GOLOOP_ENGINES
+              value: {{ .Values.node.engines | default "python" }}
+            - name: GOLOOP_KEY_PASSWORD
+              value: {{ .Values.node.key.password }}
+            - name: GOLOOP_KEY_PLUGIN
+              value: {{ .Values.node.key.plugin }}
+            - name: GOLOOP_KEY_PLUGIN_OPTIONS
+              value: {{ .Values.node.key.pluginOptions }}
+            - name: GOLOOP_KEY_SECRET
+              value: {{ .Values.node.key.secret }}
+            - name: GOLOOP_KEY_STORE
+              value: {{ .Values.node.key.store }}
+            - name: GOLOOP_LOG_FORWARDER_ADDRESS
+              value: {{ .Values.node.log.forwarder.address }}
+            - name: GOLOOP_LOG_FORWARDER_LEVEL
+              value: {{ .Values.node.log.forwarder.level | default "info" }}
+            - name: GOLOOP_LOG_FORWARDER_NAME
+              value: {{ .Values.node.log.forwarder.name }}
+            - name: GOLOOP_LOG_FORWARDER_OPTIONS
+              value: {{ .Values.node.log.forwarder.options }}
+            - name: GOLOOP_LOG_FORWARDER_VENDOR
+              value: {{ .Values.node.log.forwarder.vendor }}
+            - name: GOLOOP_LOG_LEVEL
+              value: {{ .Values.node.log.level | default "debug" }}
+            - name: GOLOOP_LOG_WRITER_COMPRESS
+              value: {{ .Values.node.log.writer.compress | default "false" | quote }}
+            - name: GOLOOP_LOG_WRITER_FILENAME
+              value: {{ .Values.node.log.writer.filename }}
+            - name: GOLOOP_LOG_WRITER_LOCALTIME
+              value: {{ .Values.node.log.writer.localtime | default "false" | quote }}
+            - name: GOLOOP_LOG_WRITER_MAXAGE
+              value: {{ .Values.node.log.writer.maxAge | default "0" | quote }}
+            - name: GOLOOP_LOG_WRITER_MAXBACKUPS
+              value: {{ .Values.node.log.writer.maxBackups | default "0" | quote }}
+            - name: GOLOOP_LOG_WRITER_MAXSIZE
+              value: {{ .Values.node.log.writer.maxSize | default "100" | quote }}
+            - name: GOLOOP_NODE_DIR
+              value: {{ .Values.node.directory | default "/data"}}
+            - name: GOLOOP_NODE_SOCK
+              value: {{ .Values.node.socket }}
+            - name: GOLOOP_P2P
+              value: "{{ .Values.node.network.p2p.advertise | default "127.0.0.1" }}:{{ .Values.node.network.p2p.port | default "8080" }}"
+            - name: GOLOOP_P2P_LISTEN
+              value: {{ .Values.node.network.p2p.listen }}
+            - name: GOLOOP_RPC_ADDR
+              value: ":{{ .Values.node.network.rpc.address }}"
+            - name: GOLOOP_RPC_DUMP
+              value: {{ .Values.node.network.rpc.dump | default "false" | quote }}
           ports:
-            - containerPort: {{ .Values.node.ports.gRPC }}
-              name: grpc
-            - containerPort: {{ .Values.node.ports.rpc }}
-              name: json-rpc
-          readinessProbe:
+            - containerPort: {{ .Values.node.network.p2p.port }}
+              name: p2p
+            - containerPort: {{ .Values.node.network.rpc.address }}
+              name: rpc
+          livenessProbe:
             failureThreshold: 100
-            httpGet:
-              path: /api/v1/status/peer
-              port: json-rpc
+            tcpSocket:
+              port: rpc
             initialDelaySeconds: 10
             periodSeconds: 10
           volumeMounts:
             - name: {{ template "dataPVCName" . }}
               mountPath: /data
-            {{- if .Values.node.certificate.autoGenerate }}
-            - name: cert
-              mountPath: /cert
-            {{- else }}
-            - name: node-certificate
-              mountPath: /cert
-              readOnly: true
-            {{- end }}
           resources:
 {{ toYaml .Values.deployment.resources | indent 12 }}
   volumeClaimTemplates:
@@ -141,19 +114,7 @@ spec:
         name: {{ template "dataPVCName" . }}
       spec:
         accessModes: {{ .Values.deployment.storage.accessModes }}
-        {{- if eq .Values.deployment.storage.storageClassName "ebs-sc" }}
-        storageClassName: {{ template "ebsSCName" . }}
-        {{- else }}
         storageClassName: {{ .Values.deployment.storage.storageClassName }}
-        {{- end }}
         resources:
           requests:
             storage: {{ .Values.deployment.storage.dataSize }}
-    - metadata:
-        name: cert
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        resources:
-          requests:
-            storage: 100Mi
-{{ end }}
