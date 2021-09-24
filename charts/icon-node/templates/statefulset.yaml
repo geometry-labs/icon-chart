@@ -23,6 +23,14 @@ spec:
       labels:
 {{ include "labels" . | indent 8 }}
     spec:
+      {{- if .Values.deployment.tolerations }}
+      tolerations:
+{{ toYaml .Values.deployment.tolerations | indent 8 }}
+      {{- end }}
+      {{- if .Values.deployment.nodeSelector }}
+      nodeSelector:
+{{ .Values.deployment.nodeSelector | toYaml | indent 8 }}
+      {{- end }}
       {{- if not .Values.node.certificate.autoGenerate}}
       volumes:
         - name: node-certificate
@@ -134,21 +142,31 @@ spec:
               mountPath: /cert
               readOnly: true
             {{- end }}
+          {{- if .Values.deployment.resources }}
           resources:
 {{ toYaml .Values.deployment.resources | indent 12 }}
+          {{- end }}
+      {{- if eq .Values.deployment.storage.storageClassName "instance-nvme" }}
+      volumes:
+        - name: cert
+          emptyDir: {}
+      {{- end }}
+
   volumeClaimTemplates:
     - metadata:
         name: {{ template "dataPVCName" . }}
       spec:
         accessModes: {{ .Values.deployment.storage.accessModes }}
-        {{- if eq .Values.deployment.storage.storageClassName "ebs-sc" }}
-        storageClassName: {{ template "ebsSCName" . }}
-        {{- else }}
+        {{- if .Values.deployment.storage.storageClassName }}
         storageClassName: {{ .Values.deployment.storage.storageClassName }}
         {{- end }}
         resources:
           requests:
             storage: {{ .Values.deployment.storage.dataSize }}
+        selector:
+          matchLabels:
+{{ toYaml .Values.deployment.storage.selectorLabels | indent 12 }}
+    {{- if ne .Values.deployment.storage.storageClassName "instance-nvme" }}
     - metadata:
         name: cert
       spec:
@@ -156,4 +174,5 @@ spec:
         resources:
           requests:
             storage: 100Mi
+    {{- end }}
 {{ end }}

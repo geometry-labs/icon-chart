@@ -42,6 +42,7 @@ node:
 
 deployment:
   replicas: 1
+  tolerations: []
   annotations: null
   resources: {}
 #  requests:
@@ -51,6 +52,9 @@ deployment:
     storageClassName: ebs-sc
     dataSize: 480Gi
     accessModes: [ "ReadWriteOnce" ]
+    selectorLabels: {}
+  nodeSelector: null
+  nodeName: null
 
 service:
   rpc:

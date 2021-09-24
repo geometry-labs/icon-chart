@@ -42,3 +42,36 @@ A Helm chart for ICON blockchain node
 | node.useNAT | string | `"no"` |  |
 | node.useSlack | string | `"no"` |  |
 
+## Using instance storage
+
+Minimal values required to use instance storage:
+
+```yaml
+deployment:
+  replicas: 3
+  tolerations:
+    - effect: NoSchedule
+      key: bxnode
+  storage:
+    storageClassName: instance-nvme
+    selectorLabels:
+      volume-type: ssd
+    dataSize: 869Gi
+  nodeSelector:
+    "geometry.io/node-purpose": "bxnode"
+```
+
+Once you have deployed the chart, you must provision enough instances for your replicas.
+Ensure they're deployed in different availability zones.
+
+To enable scheduling, you must manually bind the claim to the PV by editing each PV manifest and adding:
+
+```yaml
+spec:
+  claimRef:
+    name: name-of-pvc-0
+    namespace: namespace-of-pvc
+```
+
+Once you have edited each PV, the claims should attach and the pods should schedule.
+Ensure a 1:1 mapping between replicas and PVs or you will not be able to schedule all of the pods.
