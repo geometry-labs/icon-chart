@@ -1,0 +1,20 @@
+deployment:
+  annotations: |
+    "consul.hashicorp.com/connect-inject": "true"
+    "consul.hashicorp.com/connect-service-port": "9000"
+    "consul.hashicorp.com/connect-service": "icon-nodes-mainnet-b"
+    "consul.hashicorp.com/transparent-proxy": "false"
+  replicas: 3
+  image:
+    repo: iconloop/prep-node
+    tag: "20211012.0"
+  tolerations:
+    - effect: NoSchedule
+      key: bxnode
+  storage:
+    storageClassName: instance-nvme
+    selectorLabels:
+      volume-type: ssd
+    dataSize: 869Gi
+  nodeSelector:
+    "geometry.io/node-purpose": "bxnode"
