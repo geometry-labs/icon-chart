@@ -38,10 +38,10 @@ spec:
         - name: {{ .Release.Name }}
           image: {{ .Values.image.repo }}:{{ .Values.image.tag }}
           imagePullPolicy: IfNotPresent
-          command: ["/bin/sh"]
-          args:
-            - -c
-            - /src/entrypoint.sh
+{{/*          command: ["/bin/sh"]*/}}
+{{/*          args:*/}}
+{{/*            - -c*/}}
+{{/*            - /src/entrypoint.sh*/}}
           securityContext:
             runAsUser: 0
             runAsNonRoot: false
