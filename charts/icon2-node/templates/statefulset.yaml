@@ -1,0 +1,147 @@
+{{ if eq .Values.node.purpose "prep" }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "statefulsetName" . }}
+  labels:
+{{ include "labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: 3
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+{{ include "selectorLabels" . | indent 6 }}
+  serviceName: {{ include "statefulsetName" . }}
+  template:
+    metadata:
+      {{- if .Values.deployment.annotations }}
+      annotations:
+{{ tpl .Values.deployment.annotations . | indent 8 }}
+      {{- end }}
+      labels:
+{{ include "labels" . | indent 8 }}
+    spec:
+      {{- if not .Values.node.certificate.autoGenerate}}
+      volumes:
+        - name: node-certificate
+          secret:
+            secretName: {{ include "certificate-name" .}}
+      {{- end }}
+      {{- if not .Values.node.runLocal }}
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
+        runAsNonRoot: true
+      {{- end }}
+      initContainers:
+        {{- if .Values.node.runLocal }}
+        - name: volume-mount-permissions-data
+          image: busybox
+          command: ["sh", "-c", "chown -R 1000:1000 /data"]
+          securityContext:
+            runAsUser: 0
+            runAsNonRoot: false
+          volumeMounts:
+            - name: data
+              mountPath: /data
+        {{- end }}
+      containers:
+        - name: {{ .Release.Name }}
+          image: {{ .Values.image.repo }}:{{ .Values.image.tag }}
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh"]
+          args:
+            - -c
+            - /src/entrypoint.sh
+          securityContext:
+            runAsUser: 0
+            runAsNonRoot: false
+            capabilities:
+              add:
+                - SYS_TIME
+          env:
+            - name: IS_TAIL_WORKER
+              value: {{ .Values.node.isTailWorker | quote }}
+            - name: SERVICE
+              value: {{ .Values.node.service }}
+            - name: ROLE
+              value: {{ .Values.node.role }}
+            - name: IS_AUTOGEN_CERT
+              value: {{ .Values.node.isAutogenCert | quote }}
+            - name: FASTEST_START
+              value: {{ .Values.node.fastestStart | quote }}
+            - name: CHECK_TIMEOUT
+              value: {{ .Values.node.checkTimeout }}
+            - name: CHECK_PEER_STACK
+              value: {{ .Values.node.checkPeerStack }}
+            - name: CHECK_BLOCK_STACK
+              value: {{ .Values.node.checkBlockStack }}
+            - name: CHECK_INTERVAL
+              value: {{ .Values.node.checkInterval }}
+            - name: CHECK_STACK_LIMIT
+              value: {{ .Values.node.checkStackLimit }}
+            - name: GOLOOP_LOG_LEVEL
+              value: {{ .Values.node.goloopLogLevel }}
+            - name: LOG_OUTPUT_TYPE
+              value: {{ .Values.node.logOutputType }}
+            - name: NTP_SERVER
+              value: {{ .Values.node.ntpServer }}
+            - name: NTP_REFRESH_TIME
+              value: {{ .Values.node.ntpRefreshTime }}
+            {{- if not .Values.node.certificate.autoGenerate }}
+            - name: PRIVATE_KEY_FILENAME
+              value: "cert.pem"
+            - name: PRIVATE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "certificate-password" .}}
+                  key: password
+            {{- end }}
+          ports:
+            - containerPort: {{ .Values.node.ports.p2p }}
+              name: grpc
+            - containerPort: {{ .Values.node.ports.rpc }}
+              name: json-rpc
+          readinessProbe:
+            failureThreshold: 100
+            httpGet:
+              path: /api/v1/status/peer
+              port: json-rpc
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: {{ template "dataPVCName" . }}
+              mountPath: /data
+            {{- if .Values.node.certificate.autoGenerate }}
+            - name: cert
+              mountPath: /cert
+            {{- else }}
+            - name: node-certificate
+              mountPath: /cert
+              readOnly: true
+            {{- end }}
+          resources:
+{{ toYaml .Values.deployment.resources | indent 12 }}
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ template "dataPVCName" . }}
+      spec:
+        accessModes: {{ .Values.deployment.storage.accessModes }}
+        {{- if eq .Values.deployment.storage.storageClassName "ebs-sc" }}
+        storageClassName: {{ template "ebsSCName" . }}
+        {{- else }}
+        storageClassName: {{ .Values.deployment.storage.storageClassName }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.deployment.storage.dataSize }}
+    - metadata:
+        name: cert
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 100Mi
+{{ end }}

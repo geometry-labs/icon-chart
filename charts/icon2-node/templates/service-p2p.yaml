@@ -1,0 +1,17 @@
+{{ if eq .Values.node.purpose "prep" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "p2pService" . }}
+  labels:
+{{ include "labels" . | indent 4 }}
+    node: {{ .Release.Name }}
+    app: {{ .Release.Name }}
+spec:
+  ports:
+    - port: {{ .Values.node.ports.p2p }}
+      name: grpc
+  selector:
+{{ include "selectorLabels" . | indent 4 }}
+  type: {{ .Values.service.rpc.type | default "NodePort" }}
+{{ end }}

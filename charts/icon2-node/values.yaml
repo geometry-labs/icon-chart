@@ -1,0 +1,76 @@
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+namespace: icon
+cloudProvider: aws
+
+image:
+  repo: iconloop/goloop
+  tag: latest
+
+node:
+  isTailWorker: true
+
+  # https://github.com/icon-project/icon2-docker#docker-environments-settings
+  role: 0 # preps = 3, citizen = 0
+  service: "MainNet" # MainNet, SeJong
+  isAutogenCert: true
+  fastestStart: true
+  checkTimeout: 10
+  checkPeerStack: 6
+  checkBlockStack: 10
+  checkInterval: 10
+  checkStackLimit: 360
+  goloopLogLevel: debug
+  logOutputType: file
+  ntpServer: ""
+  ntpRefreshTime: 360
+
+#  purpose: prep
+#  runLocal: false
+#  ports:
+#    p2p: 8080
+#    rpc: 9080
+#  extIPAddr:
+#  useNAT: no
+#  fastestStart: "\"yes\""
+#  iconLogLevel: DEBUG
+#  loopchainLogLevel: DEBUG
+#  networkEnvironment: mainnet
+#  endpointURL: ""
+#  findNeighbor: true
+#  findNeighborCount: 5
+#  findNeighborOption: ""
+#  amqpTarget: "127.0.0.1"
+#  amqpKey: ""
+#  useExternalMQ: false
+#  healthCheckInterval: 30
+#  useSlack: no
+#  slackURL: ""
+#  slackPrefix: ""
+
+  certificate:
+    autoGenerate: true
+    contents: |-
+      -----BEGIN EC PRIVATE KEY-----
+      ... your key contents ...
+      -----END EC PRIVATE KEY-----
+    password: password123
+
+deployment:
+  replicas: 1
+  annotations: null
+  resources: {}
+#  requests:
+#    memory: "5Gi"
+#    cpu: "1.5"
+  storage:
+    storageClassName: ebs-sc
+    dataSize: 480Gi
+    accessModes: [ "ReadWriteOnce" ]
+
+service:
+  rpc:
+    type: NodePort
+  p2p:
+    type: NodePort
