@@ -10,7 +10,7 @@ import (
 )
 
 func TestIconUnit(t *testing.T) {
-	helmChartPath := "../charts/icon-node"
+	helmChartPath := "../charts/icon2-node"
 
 	options := &helm.Options{
 		ValuesFiles: []string{
@@ -19,7 +19,7 @@ func TestIconUnit(t *testing.T) {
 	}
 	
 	// Run RenderTemplate to render the template and capture the output.
-	output := helm.RenderTemplate(t, options, helmChartPath, "service-grpc", []string{"templates/service-grpc.yaml"})
+	output := helm.RenderTemplate(t, options, helmChartPath, "service-p2p", []string{"templates/service-p2p.yaml"})
 
 	// Now we use kubernetes/client-go library to render the template output into the Pod struct.
 	var pod corev1.Pod
