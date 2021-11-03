@@ -120,7 +120,7 @@ spec:
                   key: password
             {{- end }}
           ports:
-            - containerPort: {{ .Values.node.ports.gRPC }}
+            - containerPort: {{ .Values.node.ports.p2p }}
               name: grpc
             - containerPort: {{ .Values.node.ports.rpc }}
               name: json-rpc

@@ -75,8 +75,8 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{ .Release.Name }}-certificate-password
 {{- end }}
 
-{{/* Returns the gRPC service name */}}
-{{- define "gRPCService" -}}
+{{/* Returns the p2p service name */}}
+{{- define "p2pService" -}}
 {{ .Release.Name }}-grpc
 {{- end }}
 
