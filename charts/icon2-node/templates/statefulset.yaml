@@ -22,6 +22,14 @@ spec:
       labels:
 {{ include "labels" . | indent 8 }}
     spec:
+      {{- if .Values.deployment.tolerations }}
+      tolerations:
+{{ toYaml .Values.deployment.tolerations | indent 8 }}
+      {{- end }}
+      {{- if .Values.deployment.nodeSelector }}
+      nodeSelector:
+{{ .Values.deployment.nodeSelector | toYaml | indent 8 }}
+      {{- end }}
       securityContext:
         runAsUser: 1000
         fsGroup: 1000
@@ -65,8 +73,8 @@ spec:
               value: {{ .Values.node.goloopLogLevel }}
             - name: LOG_OUTPUT_TYPE
               value: {{ .Values.node.logOutputType }}
-            - name: NTP_SERVER
-              value: {{ .Values.node.ntpServer }}
+{{/*            - name: NTP_SERVER*/}}
+{{/*              value: {{ .Values.node.ntpServer }}*/}}
             - name: NTP_REFRESH_TIME
               value: {{ .Values.node.ntpRefreshTime }}
           ports:
@@ -77,7 +85,7 @@ spec:
           readinessProbe:
             failureThreshold: 100
             httpGet:
-              path: /api/v1/status/peer
+              path: /admin/system
               port: json-rpc
             initialDelaySeconds: 10
             periodSeconds: 10
@@ -91,18 +99,12 @@ spec:
         name: {{ template "dataPVCName" . }}
       spec:
         accessModes: {{ .Values.deployment.storage.accessModes }}
-        {{- if eq .Values.deployment.storage.storageClassName "ebs-sc" }}
-        storageClassName: {{ template "ebsSCName" . }}
-        {{- else }}
+        {{- if .Values.deployment.storage.storageClassName }}
         storageClassName: {{ .Values.deployment.storage.storageClassName }}
         {{- end }}
         resources:
           requests:
             storage: {{ .Values.deployment.storage.dataSize }}
-    - metadata:
-        name: cert
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        resources:
-          requests:
-            storage: 100Mi
+        selector:
+          matchLabels:
+{{ toYaml .Values.deployment.storage.selectorLabels | indent 12 }}

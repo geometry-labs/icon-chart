@@ -5,7 +5,7 @@ namespace: icon
 cloudProvider: aws
 
 image:
-  repo: iconloop/goloop
+  repo: iconloop/icon2-node
   tag: latest
 
 node:
@@ -37,6 +37,7 @@ node:
 deployment:
   replicas: 1
   annotations: null
+  tolerations: []
   resources: {}
 #  requests:
 #    memory: "5Gi"
@@ -45,6 +46,10 @@ deployment:
     storageClassName: ebs-sc
     dataSize: 480Gi
     accessModes: [ "ReadWriteOnce" ]
+    selectorLabels: {}
+
+  nodeSelector: null
+  nodeName: null
 
 service:
   rpc:
