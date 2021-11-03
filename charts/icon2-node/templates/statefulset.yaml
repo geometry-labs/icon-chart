@@ -54,7 +54,7 @@ spec:
             - name: SERVICE
               value: {{ .Values.node.service }}
             - name: ROLE
-              value: {{ .Values.node.role }}
+              value: {{ .Values.node.role | quote }}
             - name: IS_AUTOGEN_CERT
               value: {{ .Values.node.isAutogenCert | quote }}
             - name: FASTEST_START
