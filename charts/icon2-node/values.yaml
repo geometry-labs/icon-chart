@@ -9,6 +9,10 @@ image:
   tag: latest
 
 node:
+  ports:
+    p2p: 7100
+    rpc: 9000
+
   isTailWorker: true
 
   # https://github.com/icon-project/icon2-docker#docker-environments-settings
@@ -26,36 +30,9 @@ node:
   ntpServer: ""
   ntpRefreshTime: 360
 
-#  purpose: prep
-#  runLocal: false
-#  ports:
-#    p2p: 8080
-#    rpc: 9080
-#  extIPAddr:
-#  useNAT: no
-#  fastestStart: "\"yes\""
-#  iconLogLevel: DEBUG
-#  loopchainLogLevel: DEBUG
-#  networkEnvironment: mainnet
-#  endpointURL: ""
-#  findNeighbor: true
-#  findNeighborCount: 5
-#  findNeighborOption: ""
-#  amqpTarget: "127.0.0.1"
-#  amqpKey: ""
-#  useExternalMQ: false
-#  healthCheckInterval: 30
 #  useSlack: no
 #  slackURL: ""
 #  slackPrefix: ""
-
-  certificate:
-    autoGenerate: true
-    contents: |-
-      -----BEGIN EC PRIVATE KEY-----
-      ... your key contents ...
-      -----END EC PRIVATE KEY-----
-    password: password123
 
 deployment:
   replicas: 1
