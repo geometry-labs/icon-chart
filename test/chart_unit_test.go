@@ -19,7 +19,7 @@ func TestIconUnit(t *testing.T) {
 	}
 	
 	// Run RenderTemplate to render the template and capture the output.
-	output := helm.RenderTemplate(t, options, helmChartPath, "service-p2p", []string{"templates/service-p2p.yaml"})
+	output := helm.RenderTemplate(t, options, helmChartPath, "service-rpc", []string{"templates/service-rpc.yaml"})
 
 	// Now we use kubernetes/client-go library to render the template output into the Pod struct.
 	var pod corev1.Pod
