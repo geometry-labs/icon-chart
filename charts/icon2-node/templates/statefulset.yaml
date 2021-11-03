@@ -60,15 +60,15 @@ spec:
             - name: FASTEST_START
               value: {{ .Values.node.fastestStart | quote }}
             - name: CHECK_TIMEOUT
-              value: {{ .Values.node.checkTimeout }}
+              value: {{ .Values.node.checkTimeout | quote }}
             - name: CHECK_PEER_STACK
-              value: {{ .Values.node.checkPeerStack }}
+              value: {{ .Values.node.checkPeerStack | quote }}
             - name: CHECK_BLOCK_STACK
-              value: {{ .Values.node.checkBlockStack }}
+              value: {{ .Values.node.checkBlockStack | quote }}
             - name: CHECK_INTERVAL
-              value: {{ .Values.node.checkInterval }}
+              value: {{ .Values.node.checkInterval | quote }}
             - name: CHECK_STACK_LIMIT
-              value: {{ .Values.node.checkStackLimit }}
+              value: {{ .Values.node.checkStackLimit | quote }}
             - name: GOLOOP_LOG_LEVEL
               value: {{ .Values.node.goloopLogLevel }}
             - name: LOG_OUTPUT_TYPE
@@ -76,7 +76,7 @@ spec:
 {{/*            - name: NTP_SERVER*/}}
 {{/*              value: {{ .Values.node.ntpServer }}*/}}
             - name: NTP_REFRESH_TIME
-              value: {{ .Values.node.ntpRefreshTime }}
+              value: {{ .Values.node.ntpRefreshTime | quote }}
           ports:
             - containerPort: {{ .Values.node.ports.p2p }}
               name: grpc
