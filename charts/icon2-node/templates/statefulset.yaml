@@ -30,6 +30,16 @@ spec:
       nodeSelector:
 {{ .Values.deployment.nodeSelector | toYaml | indent 8 }}
       {{- end }}
+{{/*      initContainers:*/}}
+{{/*        - name: volume-mount-permissions-data*/}}
+{{/*          image: busybox*/}}
+{{/*          command: ["sh", "-c", "mkdir -p /goloop/data /goloop/config /goloop/logs && chown -R 1000:1000 /goloop/*"]*/}}
+{{/*          securityContext:*/}}
+{{/*            runAsUser: 0*/}}
+{{/*            runAsNonRoot: false*/}}
+{{/*          volumeMounts:*/}}
+{{/*            - name: data*/}}
+{{/*              mountPath: /data*/}}
       securityContext:
         runAsUser: 1000
         fsGroup: 1000
@@ -91,7 +101,7 @@ spec:
             periodSeconds: 10
           volumeMounts:
             - name: {{ template "dataPVCName" . }}
-              mountPath: /goloop
+              mountPath: /goloop/data
           resources:
 {{ toYaml .Values.deployment.resources | indent 12 }}
   volumeClaimTemplates:
