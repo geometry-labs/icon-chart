@@ -6,41 +6,41 @@ A Helm chart for ICON blockchain node
 
 ## Values
 
-
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | cloudProvider | string | `"aws"` |  |
+| deployment.annotations | string | `nil` |  |
+| deployment.nodeName | string | `nil` |  |
+| deployment.nodeSelector | string | `nil` |  |
 | deployment.replicas | int | `1` |  |
 | deployment.resources | object | `{}` |  |
 | deployment.storage.accessModes[0] | string | `"ReadWriteOnce"` |  |
-| deployment.storage.dataSize | string | `"360Gi"` |  |
+| deployment.storage.dataSize | string | `"480Gi"` |  |
+| deployment.storage.selectorLabels | object | `{}` |  |
 | deployment.storage.storageClassName | string | `"ebs-sc"` |  |
-| image.repo | string | `"iconloop/prep-node"` |  |
-| image.tag | string | `"20210314.0"` |  |
+| deployment.tolerations | list | `[]` |  |
+| image.repo | string | `"iconloop/icon2-node"` |  |
+| image.tag | string | `"latest"` |  |
 | namespace | string | `"icon"` |  |
-| node.amqpKey | string | `""` |  |
-| node.amqpTarget | string | `"127.0.0.1"` |  |
-| node.certificate.autoGenerate | bool | `true` |  |
-| node.certificate.contents | string | `"-----BEGIN EC PRIVATE KEY-----\n... your key contents ...\n-----END EC PRIVATE KEY-----"` |  |
-| node.certificate.password | string | `"password123"` |  |
-| node.endpointURL | string | `""` |  |
-| node.fastestStart | string | `"\"yes\""` |  |
-| node.findNeighbor | bool | `true` |  |
-| node.findNeighborCount | int | `5` |  |
-| node.findNeighborOption | string | `""` |  |
-| node.healthCheckInterval | int | `30` |  |
-| node.iconLogLevel | string | `"DEBUG"` |  |
-| node.loopchainLogLevel | string | `"DEBUG"` |  |
-| node.networkEnvironment | string | `"mainnet"` |  |
-| node.ports.gRPC | int | `7100` |  |
+| node.checkBlockStack | int | `10` |  |
+| node.checkInterval | int | `10` |  |
+| node.checkPeerStack | int | `6` |  |
+| node.checkStackLimit | int | `360` |  |
+| node.checkTimeout | int | `10` |  |
+| node.fastestStart | bool | `true` |  |
+| node.goloopLogLevel | string | `"debug"` |  |
+| node.isAutogenCert | bool | `true` |  |
+| node.isTailWorker | bool | `true` |  |
+| node.logOutputType | string | `"file"` |  |
+| node.ntpRefreshTime | int | `360` |  |
+| node.ntpServer | string | `""` |  |
+| node.ports.p2p | int | `7100` |  |
 | node.ports.rpc | int | `9000` |  |
-| node.purpose | string | `"prep"` |  |
-| node.runLocal | bool | `false` |  |
-| node.slackPrefix | string | `""` |  |
-| node.slackURL | string | `""` |  |
-| node.useExternalMQ | bool | `false` |  |
-| node.useNAT | string | `"no"` |  |
-| node.useSlack | string | `"no"` |  |
+| node.role | int | `0` |  |
+| node.service | string | `"MainNet"` |  |
+| service.p2p.type | string | `"NodePort"` |  |
+| service.rpc.type | string | `"NodePort"` |  |
+
 
 ## Using instance storage
 
