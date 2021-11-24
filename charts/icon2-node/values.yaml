@@ -9,6 +9,8 @@ image:
   tag: latest
 
 node:
+  seeds: seed-ctz.solidwallet.io:7100
+
   ports:
     p2p: 7100
     rpc: 9000
