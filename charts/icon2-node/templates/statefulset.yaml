@@ -59,8 +59,6 @@ spec:
               add:
                 - SYS_TIME
           env:
-            - name: IS_TAIL_WORKER
-              value: {{ .Values.node.isTailWorker | quote }}
             - name: SERVICE
               value: {{ .Values.node.service }}
             - name: ROLE
@@ -87,8 +85,8 @@ spec:
               value: {{ .Values.node.logOutputType }}
 {{/*            - name: NTP_SERVER*/}}
 {{/*              value: {{ .Values.node.ntpServer }}*/}}
-            - name: NTP_REFRESH_TIME
-              value: {{ .Values.node.ntpRefreshTime | quote }}
+{{/*            - name: NTP_REFRESH_TIME*/}}
+{{/*              value: {{ .Values.node.ntpRefreshTime | quote }}*/}}
           ports:
             - containerPort: {{ .Values.node.ports.p2p }}
               name: grpc

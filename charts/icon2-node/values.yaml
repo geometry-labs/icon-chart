@@ -9,7 +9,6 @@ image:
   tag: latest
 
 node:
-  seeds: seed-ctz.solidwallet.io:7100
 
   ports:
     p2p: 7100
@@ -18,6 +17,7 @@ node:
   isTailWorker: true
 
   # https://github.com/icon-project/icon2-docker#docker-environments-settings
+  seeds: seed-ctz.solidwallet.io:7100
   role: 0 # preps = 3, citizen = 0
   service: "MainNet" # MainNet, SeJong
   isAutogenCert: true
