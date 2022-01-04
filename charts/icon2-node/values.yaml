@@ -8,6 +8,8 @@ sidecar:
     tag: v0.0.1
   variance: 25
   checkInterval: 5
+  peerIP: 52.196.159.184
+  peerAddress: hx9c63f73d3c564a54d0eed84f90718b1ebed16f09
 
 node:
   image:

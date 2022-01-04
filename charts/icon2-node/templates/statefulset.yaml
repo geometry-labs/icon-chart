@@ -97,6 +97,10 @@ spec:
               value: {{ .Values.sidecar.variance | quote }}
             - name: CRON_SLEEP_SEC
               value: {{ .Values.sidecar.checkInterval | quote }}
+            - name: PEER_SEED_IP
+              value: {{ .Values.sidecar.peerIP | quote }}
+            - name: PEER_SEED_ADDRESS
+              value: {{ .Values.sidecar.peerAddress | quote }}
           ports:
             - containerPort: 80
               name: readyz
@@ -109,11 +113,11 @@ spec:
             periodSeconds: 10
           resources:
             requests:
-              cpu: 100m
-              memory: 256Mi
+              cpu: 25m
+              memory: 100Mi
             limits:
-              cpu: 100m
-              memory: 256Mi
+              cpu: 25m
+              memory: 100Mi
   volumeClaimTemplates:
     - metadata:
         name: {{ template "dataPVCName" . }}
