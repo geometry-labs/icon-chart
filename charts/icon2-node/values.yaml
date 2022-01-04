@@ -6,7 +6,7 @@ cloudProvider: aws
 
 image:
   repo: iconloop/icon2-node
-  tag: v1.0.10
+  tag: v1.1.3
 
 node:
 
