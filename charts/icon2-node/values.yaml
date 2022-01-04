@@ -1,21 +1,21 @@
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
 namespace: icon
 cloudProvider: aws
 
-image:
-  repo: iconloop/icon2-node
-  tag: v1.1.3
+
+sidecar:
+  image:
+    repo: geometrylabs/icon-node-health-sidecar
+    tag: v0.0.1
+  variance: 25
+  checkInterval: 5
 
 node:
-
+  image:
+    repo: iconloop/icon2-node
+    tag: v1.1.3
   ports:
     p2p: 7100
     rpc: 9000
-
-  isTailWorker: true
-
   # https://github.com/icon-project/icon2-docker#docker-environments-settings
   seeds: seed-ctz.solidwallet.io:7100
   role: 0 # preps = 3, citizen = 0
@@ -31,7 +31,6 @@ node:
   logOutputType: file
   ntpServer: ""
   ntpRefreshTime: 360
-
 #  useSlack: no
 #  slackURL: ""
 #  slackPrefix: ""
