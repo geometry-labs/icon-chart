@@ -30,28 +30,14 @@ spec:
       nodeSelector:
 {{ .Values.deployment.nodeSelector | toYaml | indent 8 }}
       {{- end }}
-{{/*      initContainers:*/}}
-{{/*        - name: volume-mount-permissions-data*/}}
-{{/*          image: busybox*/}}
-{{/*          command: ["sh", "-c", "mkdir -p /goloop/data /goloop/config /goloop/logs && chown -R 1000:1000 /goloop/*"]*/}}
-{{/*          securityContext:*/}}
-{{/*            runAsUser: 0*/}}
-{{/*            runAsNonRoot: false*/}}
-{{/*          volumeMounts:*/}}
-{{/*            - name: data*/}}
-{{/*              mountPath: /data*/}}
       securityContext:
         runAsUser: 1000
         fsGroup: 1000
         runAsNonRoot: true
       containers:
         - name: {{ .Release.Name }}
-          image: {{ .Values.image.repo }}:{{ .Values.image.tag }}
+          image: {{ .Values.node.image.repo }}:{{ .Values.node.image.tag }}
           imagePullPolicy: IfNotPresent
-{{/*          command: ["/bin/sh"]*/}}
-{{/*          args:*/}}
-{{/*            - -c*/}}
-{{/*            - /src/entrypoint.sh*/}}
           securityContext:
             runAsUser: 0
             runAsNonRoot: false
@@ -83,16 +69,12 @@ spec:
               value: {{ .Values.node.goloopLogLevel }}
             - name: LOG_OUTPUT_TYPE
               value: {{ .Values.node.logOutputType }}
-{{/*            - name: NTP_SERVER*/}}
-{{/*              value: {{ .Values.node.ntpServer }}*/}}
-{{/*            - name: NTP_REFRESH_TIME*/}}
-{{/*              value: {{ .Values.node.ntpRefreshTime | quote }}*/}}
           ports:
             - containerPort: {{ .Values.node.ports.p2p }}
               name: grpc
             - containerPort: {{ .Values.node.ports.rpc }}
               name: json-rpc
-          readinessProbe:
+          livenessProbe:
             failureThreshold: 100
             httpGet:
               path: /admin/system
@@ -104,6 +86,38 @@ spec:
               mountPath: /goloop/data
           resources:
 {{ toYaml .Values.deployment.resources | indent 12 }}
+        - name: health-sidecar
+          image: {{ .Values.sidecar.image.repo }}:{{ .Values.sidecar.image.tag }}
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 0
+            runAsNonRoot: false
+          env:
+            - name: BLOCK_HEIGHT_VARIANCE
+              value: {{ .Values.sidecar.variance | quote }}
+            - name: CRON_SLEEP_SEC
+              value: {{ .Values.sidecar.checkInterval | quote }}
+            - name: PEER_SEED_IP
+              value: {{ .Values.sidecar.peerIP | quote }}
+            - name: PEER_SEED_ADDRESS
+              value: {{ .Values.sidecar.peerAddress | quote }}
+          ports:
+            - containerPort: 80
+              name: readyz
+          readinessProbe:
+            failureThreshold: 100
+            httpGet:
+              path: /readyz
+              port: readyz
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 25m
+              memory: 100Mi
+            limits:
+              cpu: 25m
+              memory: 100Mi
   volumeClaimTemplates:
     - metadata:
         name: {{ template "dataPVCName" . }}
