@@ -116,8 +116,8 @@ spec:
               cpu: 25m
               memory: 100Mi
             limits:
-              cpu: 25m
-              memory: 100Mi
+              cpu: 100m
+              memory: 256Mi
   volumeClaimTemplates:
     - metadata:
         name: {{ template "dataPVCName" . }}
